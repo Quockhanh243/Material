@@ -1,4 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import {StudentService} from '../Service/student.service';
+import {Student} from '../Model/student';
+import {DataSource} from '@angular/cdk/collections';
+import {Observable} from 'rxjs';
 
 @Component({
   selector: 'app-date-picker',
@@ -7,9 +11,21 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DatePickerComponent implements OnInit {
 
-  constructor() { }
+  student = new StudentDataSource(this.studentService);
+  displayedColumns = ['ID', 'Name', 'Birth'];
+  constructor(private studentService: StudentService) { }
+  ngOnInit() {}
+}
 
-  ngOnInit() {
+export class StudentDataSource extends DataSource<any>{
+  constructor(private studentService: StudentService){
+    super();
   }
 
+  connect(): Observable<Student[]> {
+    return this.studentService.getStudent();
+  }
+
+  disconnect(): void {
+  }
 }
