@@ -1,9 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import {StudentService} from '../Service/student.service';
 import {Student} from '../Model/student';
-import {DataSource} from '@angular/cdk/collections';
-import {Observable} from 'rxjs';
-import {MatPaginator} from '@angular/material';
+import {Subscription} from 'rxjs';
+import {MatDialog, MatPaginator, MatTableDataSource} from '@angular/material';
+import {StudentDetailComponent} from '../student-detail/student-detail.component';
 
 @Component({
   selector: 'app-date-picker',
@@ -11,23 +11,24 @@ import {MatPaginator} from '@angular/material';
   styleUrls: ['./date-picker.component.scss']
 })
 export class DatePickerComponent implements OnInit {
-
-  student = new StudentDataSource(this.studentService);
+  subscription: Subscription;
+  student;
   displayedColumns = ['ID', 'Name', 'Birth'];
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
-  constructor(private studentService: StudentService) { }
-  ngOnInit() {}
-}
-
-export class StudentDataSource extends DataSource<any>{
-  constructor(private studentService: StudentService){
-    super();
+  constructor(private studentService: StudentService, private dialog: MatDialog) { }
+  ngOnInit() {
+    this.subscription = this.studentService.getStudent().subscribe((data: Student[]) => {
+      this.student = new MatTableDataSource<Student>(data);
+      this.student.paginator = this.paginator;
+    });
+  }
+  applyFilter(filterValue: string){
+    filterValue = filterValue.trim();
+    filterValue = filterValue.toLowerCase();
+    this.student.filer = filterValue;
   }
 
-  connect(): Observable<Student[]> {
-    return this.studentService.getStudent();
-  }
-
-  disconnect(): void {
+  logData(row) {
+    this.dialog.open(StudentDetailComponent, {data: {row}});
   }
 }

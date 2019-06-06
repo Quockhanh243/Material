@@ -50,12 +50,15 @@ import {
 } from '@angular/material';
 import { DatePickerComponent } from './date-picker/date-picker.component';
 import {StudentService} from './Service/student.service';
+import { StudentDetailComponent } from './student-detail/student-detail.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    DatePickerComponent
+    DatePickerComponent,
+    StudentDetailComponent,
   ],
+  entryComponents: [StudentDetailComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,

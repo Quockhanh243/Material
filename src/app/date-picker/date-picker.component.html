@@ -1,4 +1,9 @@
 <div class="container">
+  <div class="example-header">
+    <mat-form-field>
+      <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+    </mat-form-field>
+  </div>
   <mat-table [dataSource]="student">
     <ng-container matColumnDef="ID">
       <mat-header-cell *matHeaderCellDef>ID</mat-header-cell>
@@ -13,6 +18,7 @@
       <mat-cell *matCellDef="let student">{{student.birth|date:'dd/MM/yyyy'}}</mat-cell>
     </ng-container>
     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-    <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns" (click)="logData(row)"></mat-row>
   </mat-table>
+  <mat-paginator [pageSizeOptions]="[2,4,6]" showFirstLastButtons></mat-paginator>
 </div>
